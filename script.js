@@ -12,6 +12,58 @@
     canvas.attr("width", width);
     canvas.attr("height", height);
 
+    // --- دالة التصغير التلقائي للشاشات الصغيرة (الآيفون وسفاري) ---
+    function adjustScale() {
+        var winWidth = $(window).width();
+        var wrapWidth = 1100;
+        var wrapHeight = 680;
+
+        if (winWidth < wrapWidth) {
+            var scale = winWidth / wrapWidth;
+            $('#wrap').css({
+                'transform': 'scale(' + scale + ')',
+                'transform-origin': 'top left'
+            });
+            $('#main').css('height', (wrapHeight * scale) + 'px');
+        } else {
+            $('#wrap').css({
+                'transform': 'scale(1)',
+                'transform-origin': 'top center'
+            });
+            $('#main').css('height', wrapHeight + 'px');
+        }
+    }
+
+    // تفعيل التصغير عند تحميل الصفحة وعند تدوير شاشة الهاتف
+    $(window).on('resize', adjustScale);
+    adjustScale();
+    // -------------------------------------------------------------
+
+    // --- دالة الوقت المخصصة (لفرض الأرقام الإنجليزية والنص الإندونيسي) ---
+    window.timeElapse = function (date) {
+        var current = new Date();
+        var seconds = (Date.parse(current) - Date.parse(date)) / 1000;
+
+        var days = Math.floor(seconds / (3600 * 24));
+        seconds = seconds % (3600 * 24);
+
+        var hours = Math.floor(seconds / 3600);
+        if (hours < 10) { hours = "0" + hours; }
+        seconds = seconds % 3600;
+
+        var minutes = Math.floor(seconds / 60);
+        if (minutes < 10) { minutes = "0" + minutes; }
+        seconds = seconds % 60;
+
+        if (seconds < 10) { seconds = "0" + seconds; }
+
+        // النص يعرض الآن: أيام، ساعات، دقائق، ثوانٍ باللغة الإندونيسية وأرقام 1,2,3
+        var result = '<span class="digit">' + days + '</span> Hari <span class="digit">' + hours + '</span> Jam <span class="digit">' + minutes + '</span> Menit <span class="digit">' + seconds + '</span> Detik';
+
+        $("#clock").html(result);
+    };
+    // -------------------------------------------------------------
+
     var opts = {
         seed: {
             x: width / 2 - 20,
@@ -46,7 +98,7 @@
             height: 5,
             speed: 10,
         }
-    }
+    };
 
     var tree = new Tree(canvas[0], width, height, opts);
     var seed = tree.seed;
@@ -55,8 +107,17 @@
 
     canvas.click(function (e) {
         var offset = canvas.offset(), x, y;
-        x = e.pageX - offset.left;
-        y = e.pageY - offset.top;
+
+        // التعديل ليحسب موقع الضغطة بشكل صحيح بعد تصغير الشاشة
+        var wrap = $('#wrap')[0];
+        var transformMatrix = window.getComputedStyle(wrap).transform;
+        var scaleValue = 1;
+        if (transformMatrix !== 'none') {
+            scaleValue = parseFloat(transformMatrix.split('(')[1].split(',')[0]);
+        }
+
+        x = (e.pageX - offset.left) / scaleValue;
+        y = (e.pageY - offset.top) / scaleValue;
 
         if (seed.hover(x, y)) {
             hold = 0;
@@ -64,184 +125,141 @@
             canvas.unbind("mousemove");
             canvas.removeClass('hand');
 
-            // جلب عناصر الصوت وتفعيلها فوراً لحل مشكلة قفل التشغيل التلقائي في Safari
             var music = document.getElementById('myMusic');
             var typeSound = document.getElementById("typeSound");
             var dingSound = document.getElementById("dingSound");
 
-            // تشغيل وهمي صامت فوري لاستئذان سفاري (User Interaction Gesture)
             if (music) { music.play().catch(e => console.log(e)); }
             if (typeSound) { typeSound.load(); }
             if (dingSound) { dingSound.load(); }
 
-            // المؤقتات الزمنية لتأثيرات الكتابة والتنبيه
-
-            // سطر 1
+            // المؤقتات (تم الاحتفاظ بها كما هي)
             setTimeout(() => {
                 if (typeSound) {
-                    typeSound.volume = 0.3;
-                    typeSound.play().catch(e => console.log(e));
+                    typeSound.volume = 0.3; typeSound.play().catch(e => console.log(e));
                     setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 1500);
                 }
             }, 12600);
-
             setTimeout(() => {
                 if (dingSound) {
-                    dingSound.volume = 0.6;
-                    dingSound.play().catch(e => console.log(e));
+                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
                     setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
                 }
             }, 14000);
-
-            // سطر 2
             setTimeout(() => {
                 if (typeSound) {
-                    typeSound.volume = 0.4;
-                    typeSound.play().catch(e => console.log(e));
+                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
                     setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2700);
                 }
             }, 15400);
-
             setTimeout(() => {
                 if (dingSound) {
-                    dingSound.volume = 0.6;
-                    dingSound.play().catch(e => console.log(e));
+                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
                     setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
                 }
             }, 18200);
-
-            // سطر 3
             setTimeout(() => {
                 if (typeSound) {
-                    typeSound.volume = 0.4;
-                    typeSound.play().catch(e => console.log(e));
+                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
                     setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2600);
                 }
             }, 19600);
-
             setTimeout(() => {
                 if (dingSound) {
-                    dingSound.volume = 0.6;
-                    dingSound.play().catch(e => console.log(e));
+                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
                     setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
                 }
             }, 22000);
-
-            // سطر 4
             setTimeout(() => {
                 if (typeSound) {
-                    typeSound.volume = 0.4;
-                    typeSound.play().catch(e => console.log(e));
+                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
                     setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2800);
                 }
             }, 23500);
-
             setTimeout(() => {
                 if (dingSound) {
-                    dingSound.volume = 0.6;
-                    dingSound.play().catch(e => console.log(e));
+                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
                     setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
                 }
             }, 26200);
-
-            // سطر 5
             setTimeout(() => {
                 if (typeSound) {
-                    typeSound.volume = 0.4;
-                    typeSound.play().catch(e => console.log(e));
+                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
                     setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2800);
                 }
             }, 27800);
-
             setTimeout(() => {
                 if (dingSound) {
-                    dingSound.volume = 0.6;
-                    dingSound.play().catch(e => console.log(e));
+                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
                     setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
                 }
             }, 31000);
-
-            // سطر 6
             setTimeout(() => {
                 if (typeSound) {
-                    typeSound.volume = 0.4;
-                    typeSound.play().catch(e => console.log(e));
+                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
                     setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2600);
                 }
             }, 32600);
-
             setTimeout(() => {
                 if (dingSound) {
-                    dingSound.volume = 0.6;
-                    dingSound.play().catch(e => console.log(e));
+                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
                     setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
                 }
             }, 35600);
-
-            // سطر 7
             setTimeout(() => {
                 if (typeSound) {
-                    typeSound.volume = 0.4;
-                    typeSound.play().catch(e => console.log(e));
+                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
                     setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2500);
                 }
             }, 37000);
-
             setTimeout(() => {
                 if (dingSound) {
-                    dingSound.volume = 0.6;
-                    dingSound.play().catch(e => console.log(e));
+                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
                     setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
                 }
             }, 39500);
-
-            // سطر 8
             setTimeout(() => {
                 if (typeSound) {
-                    typeSound.volume = 0.4;
-                    typeSound.play().catch(e => console.log(e));
+                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
                     setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2000);
                 }
             }, 41000);
-
             setTimeout(() => {
                 if (dingSound) {
-                    dingSound.volume = 0.6;
-                    dingSound.play().catch(e => console.log(e));
+                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
                     setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
                 }
             }, 43000);
-
-            // سطر 9
             setTimeout(() => {
                 if (typeSound) {
-                    typeSound.volume = 0.4;
-                    typeSound.play().catch(e => console.log(e));
+                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
                     setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2700);
                 }
             }, 44700);
-
             setTimeout(() => {
                 if (dingSound) {
-                    dingSound.volume = 0.6;
-                    dingSound.play().catch(e => console.log(e));
+                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
                     setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
                 }
             }, 47400);
-
-            // السطر الأخير
             setTimeout(() => {
                 if (typeSound) {
-                    typeSound.volume = 0.4;
-                    typeSound.play().catch(e => console.log(e));
+                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
                     setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2100);
                 }
             }, 48700);
         }
     }).mousemove(function (e) {
         var offset = canvas.offset(), x, y;
-        x = e.pageX - offset.left;
-        y = e.pageY - offset.top;
+        var wrap = $('#wrap')[0];
+        var transformMatrix = window.getComputedStyle(wrap).transform;
+        var scaleValue = 1;
+        if (transformMatrix !== 'none') {
+            scaleValue = parseFloat(transformMatrix.split('(')[1].split(',')[0]);
+        }
+        x = (e.pageX - offset.left) / scaleValue;
+        y = (e.pageY - offset.top) / scaleValue;
+
         canvas.toggleClass('hand', seed.hover(x, y));
     });
 
@@ -303,8 +321,7 @@
 
     var textAnimate = eval(Jscex.compile("async", function () {
         var together = new Date();
-        // يمكنك تعديل التاريخ أدناه حسب بداية عداد الوقت الأصلي الخاص بك
-        together.setFullYear(2025, 9, 17);
+        together.setFullYear(2023, 6, 25);
         together.setHours(0);
         together.setMinutes(0);
         together.setSeconds(0);
@@ -313,7 +330,7 @@
         $("#code").show().typewriter();
         $("#clock-box").fadeIn(500);
         while (true) {
-            timeElapse(together);
+            window.timeElapse(together);
             $await(Jscex.Async.sleep(1000));
         }
     }));

@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- منع تكبير الشاشة العشوائي في متصفح سفاري -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Untukmu</title>
     <link rel="icon" type="image/x-icon" href="Love_files/icon.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -15,19 +16,23 @@
             background-color: #ffeeed;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
+            /* منع التمرير الأفقي */
         }
 
-        /* تحسينات التجاوب لأجهزة الآيفون وسفاري */
         #main {
             width: 100%;
             overflow: hidden;
+            display: flex;
+            justify-content: center;
         }
 
+        /* تثبيت الحجم الأصلي ليتم تصغيره لاحقاً برمجياً */
         #wrap {
             position: relative;
+            width: 1100px;
+            height: 680px;
             margin: 0 auto;
-            width: 100%;
-            max-width: 1100px;
         }
 
         .say {
@@ -49,18 +54,20 @@
             text-align: left;
             font-size: 14px;
             color: #666;
+            margin-top: 10px;
         }
 
         #clock {
             position: relative;
             top: -5px;
+            font-weight: 600;
+            color: #be1a25;
+            font-size: 18px;
         }
 
-        /* جعل الكانفاس متجاوباً مع الشاشات الصغيرة */
-        canvas {
-            max-width: 100%;
-            height: auto;
-            display: block;
+        .digit {
+            font-family: 'Poppins', sans-serif;
+            /* ضمان استخدام أرقام إنجليزية حديثة */
         }
     </style>
 
@@ -90,18 +97,17 @@
             <div id="text">
                 <div id="code">
                     <span class="say" style="font-weight: 600; color: #be1a25;">Untuk dia yang menghuni
-                        hatiku:</span><br>
-                    <span class="say">Sejak kepergianmu, cahaya dunia ini meredup,</span>
-                    <span class="say">dan hatiku terasa dingin tanpamu.</span>
-                    <span class="say">Setiap malam, aku merindukan suaramu, tawamu, bahkan sunyimu.</span>
-                    <span class="say">Kamu lebih dari sekadar kenangan, kamu adalah kehidupan di dadaku.</span>
+                        hatiku:</span><br><br>
+                    <span class="say">Sejak kepergianmu, cahaya dunia ini meredup,</span><br>
+                    <span class="say">dan hatiku terasa dingin tanpamu.</span><br>
+                    <span class="say">Setiap malam, aku merindukan suaramu, tawamu, bahkan sunyimu.</span><br>
+                    <span class="say">Kamu lebih dari sekadar kenangan, kamu adalah kehidupan di dadaku.</span><br>
                     <span class="say">Jika pelukan bisa diwujudkan dalam kata-kata, aku akan menulisnya seribu
-                        kali.</span>
-                    <span class="say">Kamu adalah luka yang tak pernah ingin kusembuhkan,</span>
-                    <span class="say">dan tatapan yang kembali menghidupkanku.</span>
-                    <span class="say">Aku membutuhkanmu... seperti jiwa yang membutuhkan detaknya.</span>
-                    <span class="say"></span>
-                    <span >— Dan aku mencintaimu... setiap waktu 💖</span>
+                        kali.</span><br>
+                    <span class="say">Kamu adalah luka yang tak pernah ingin kusembuhkan,</span><br>
+                    <span class="say">dan tatapan yang kembali menghidupkanku.</span><br>
+                    <span class="say">Aku membutuhkanmu... seperti jiwa yang membutuhkan detaknya.</span><br>
+                    <span class="say"><span class="space"></span>— Dan aku mencintaimu... setiap waktu 💖</span>
                 </div>
             </div>
 
