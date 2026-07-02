@@ -1,53 +1,27 @@
-@media only screen and (max-device-width: 768px) {
-	body {
-		background: radial-gradient(circle, #ffebd7 50%, #b36cf6 150%) !important;
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
 
-		margin: 0 !important;
-		padding: 0 !important;
-		background-repeat: no-repeat !important;
-		background-attachment: fixed !important;
-		background-size: cover !important;
-		font-family: 'Cairo', sans-serif !important;
-
-	}
-
-	#text {
-		width: 760px !important;
-		height: auto !important;
-		left: 300px !important;
-		top: 700px !important;
-		position: absolute !important;
-	}
-
-
-	#code {
-		display: none;
-		font-size: 48px !important;
-		line-height: 2.2 !important;
-		word-wrap: break-word;
-
-	}
-
-
-	#clock-box {
-		position: absolute;
-		left: 88px !important;
-		top: 560px !important;
-		font-size: 38px !important;
-		display: none;
-	}
-
-
+html {
+	width: 100%;
+	overflow-x: hidden;
 }
 
 body {
-	margin: 0;
-	padding: 0;
-	background: radial-gradient(circle, #ffebd7 50%, #b36cf6 150%);
-	color-scheme: only light;
-	font-family: 'Cairo', sans-serif;
-}
 
+	min-height: 100vh;
+
+	overflow-x: hidden;
+
+	background: radial-gradient(circle, #ffebd7 50%, #b36cf6 150%);
+
+	font-family: 'Cairo', sans-serif;
+
+	color-scheme: only light;
+
+}
 
 a {
 	color: #5C4033;
@@ -55,23 +29,39 @@ a {
 }
 
 #main {
+
 	width: 100%;
+
+	display: flex;
+
+	justify-content: center;
+
 }
 
 #wrap {
+
 	position: relative;
-	margin: 0 auto;
-	width: 1100px;
-	height: 680px;
-	margin-top: 100px;
+
+	width: min(1100px, 95vw);
+
+	aspect-ratio: 1100/680;
+
+	margin: 60px auto;
+
 }
 
 #text {
-	width: 430px;
-	height: auto;
-	left: 70px;
-	top: 40px;
+
 	position: absolute;
+
+	width: 40%;
+
+	max-width: 430px;
+
+	left: 6%;
+
+	top: 6%;
+
 }
 
 #code {
@@ -83,11 +73,15 @@ a {
 
 
 #clock-box {
+
 	position: absolute;
-	left: 108px;
-	top: 585px;
+
+	left: 8%;
+
+	bottom: 6%;
+
 	font-size: 28px;
-	display: none;
+
 }
 
 #clock-box a {
@@ -104,9 +98,13 @@ a {
 }
 
 #canvas {
-	margin: 0 auto;
-	width: 1100px;
-	height: 680px;
+
+	width: 100%;
+
+	height: 100%;
+
+	display: block;
+
 }
 
 #error {
@@ -126,4 +124,70 @@ a {
 
 .space {
 	margin-right: 150px;
+}
+
+@media (max-width:768px){
+
+    #wrap{
+
+        width:100vw;
+
+        aspect-ratio:auto;
+
+        height:100vh;
+
+        margin:0;
+
+    }
+
+    #canvas{
+
+        width:100%;
+
+        height:100%;
+
+    }
+
+    #text{
+
+        width:88%;
+
+        max-width:none;
+
+        left:6%;
+
+        top:55%;
+
+        transform:translateY(-50%);
+
+    }
+
+    #code{
+
+        font-size:18px;
+
+        line-height:2;
+
+    }
+
+    #clock-box{
+
+        width:90%;
+
+        left:5%;
+
+        bottom:25px;
+
+        text-align:center;
+
+        font-size:18px;
+
+    }
+
+    #clock .digit{
+
+        font-size:26px;
+
+    }
+
 }

@@ -1,69 +1,31 @@
 (function () {
     var canvas = $('#canvas');
 
+
     if (!canvas[0].getContext) {
         $("#error").show();
         return false;
     }
 
-    var width = canvas.width();
-    var height = canvas.height();
+    function resizeCanvas() {
 
-    canvas.attr("width", width);
-    canvas.attr("height", height);
+        let w = $("#wrap").width();
 
-    // --- دالة التصغير التلقائي للشاشات الصغيرة (الآيفون وسفاري) ---
-    function adjustScale() {
-        var winWidth = $(window).width();
-        var wrapWidth = 1100;
-        var wrapHeight = 680;
+        let h = $("#wrap").height();
 
-        if (winWidth < wrapWidth) {
-            var scale = winWidth / wrapWidth;
-            $('#wrap').css({
-                'transform': 'scale(' + scale + ')',
-                'transform-origin': 'top left'
-            });
-            $('#main').css('height', (wrapHeight * scale) + 'px');
-        } else {
-            $('#wrap').css({
-                'transform': 'scale(1)',
-                'transform-origin': 'top center'
-            });
-            $('#main').css('height', wrapHeight + 'px');
-        }
+        canvas.attr("width", w);
+
+        canvas.attr("height", h);
+
     }
 
-    // تفعيل التصغير عند تحميل الصفحة وعند تدوير شاشة الهاتف
-    $(window).on('resize', adjustScale);
-    adjustScale();
-    // -------------------------------------------------------------
+    resizeCanvas();
 
-    // --- دالة الوقت المخصصة (لفرض الأرقام الإنجليزية والنص الإندونيسي) ---
-    window.timeElapse = function (date) {
-        var current = new Date();
-        var seconds = (Date.parse(current) - Date.parse(date)) / 1000;
+    $(window).on("resize", resizeCanvas);
 
-        var days = Math.floor(seconds / (3600 * 24));
-        seconds = seconds % (3600 * 24);
+    var width = canvas[0].width;
 
-        var hours = Math.floor(seconds / 3600);
-        if (hours < 10) { hours = "0" + hours; }
-        seconds = seconds % 3600;
-
-        var minutes = Math.floor(seconds / 60);
-        if (minutes < 10) { minutes = "0" + minutes; }
-        seconds = seconds % 60;
-
-        if (seconds < 10) { seconds = "0" + seconds; }
-
-        // النص يعرض الآن: أيام، ساعات، دقائق، ثوانٍ باللغة الإندونيسية وأرقام 1,2,3
-        var result = '<span class="digit">' + days + '</span> Hari <span class="digit">' + hours + '</span> Jam <span class="digit">' + minutes + '</span> Menit <span class="digit">' + seconds + '</span> Detik';
-
-        $("#clock").html(result);
-    };
-    // -------------------------------------------------------------
-
+    var height = canvas[0].height;
     var opts = {
         seed: {
             x: width / 2 - 20,
@@ -98,7 +60,7 @@
             height: 5,
             speed: 10,
         }
-    };
+    }
 
     var tree = new Tree(canvas[0], width, height, opts);
     var seed = tree.seed;
@@ -107,159 +69,317 @@
 
     canvas.click(function (e) {
         var offset = canvas.offset(), x, y;
-
-        // التعديل ليحسب موقع الضغطة بشكل صحيح بعد تصغير الشاشة
-        var wrap = $('#wrap')[0];
-        var transformMatrix = window.getComputedStyle(wrap).transform;
-        var scaleValue = 1;
-        if (transformMatrix !== 'none') {
-            scaleValue = parseFloat(transformMatrix.split('(')[1].split(',')[0]);
-        }
-
-        x = (e.pageX - offset.left) / scaleValue;
-        y = (e.pageY - offset.top) / scaleValue;
-
+        x = e.pageX - offset.left;
+        y = e.pageY - offset.top;
         if (seed.hover(x, y)) {
             hold = 0;
             canvas.unbind("click");
             canvas.unbind("mousemove");
             canvas.removeClass('hand');
 
+            // تشغيل الموسيقى
             var music = document.getElementById('myMusic');
-            var typeSound = document.getElementById("typeSound");
-            var dingSound = document.getElementById("dingSound");
 
-            if (music) { music.play().catch(e => console.log(e)); }
-            if (typeSound) { typeSound.load(); }
-            if (dingSound) { dingSound.load(); }
+            if (music) {
+                music.play();
 
-            // المؤقتات (تم الاحتفاظ بها كما هي)
+            }
+
+            //الى من تسكن قلبي 
+            const startDelaySeconds = 12.6; // وقت تأخير بداية التشغيل
+            const stopAfterSeconds = 1.5; // مدة التشغيل قبل التوقف
+            // نحدد المؤقت لتشغيل الصوت بعد startDelaySeconds
             setTimeout(() => {
-                if (typeSound) {
-                    typeSound.volume = 0.3; typeSound.play().catch(e => console.log(e));
-                    setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 1500);
-                }
-            }, 12600);
+                const sound = document.getElementById("typeSound");
+                sound.volume = 0.3; // بين 0 (صامت) و 1 (أعلى صوت)
+                sound.play();
+
+                // بعد تشغيل الصوت، نحدد مؤقت التوقف بعد stopAfterSeconds
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0; // إعادة الصوت لبدايته
+                }, stopAfterSeconds * 1000);
+
+            }, startDelaySeconds * 1000);
+
+            //دونك
+            const startDelaySecondsD = 14;
+            const stopAfterSecondsD = 0.8;
             setTimeout(() => {
-                if (dingSound) {
-                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
-                    setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
-                }
-            }, 14000);
+                const sound = document.getElementById("dingSound");
+                sound.volume = 0.6;
+                sound.play();
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSecondsD * 1000);
+
+            }, startDelaySecondsD * 1000);
+
+
+
+            //منذ غيابك خفت نور الدنيه 
+            const startDelaySeconds1 = 15.4;
+            const stopAfterSeconds1 = 2.7;
+
             setTimeout(() => {
-                if (typeSound) {
-                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
-                    setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2700);
-                }
-            }, 15400);
+                const sound = document.getElementById("typeSound");
+                sound.volume = 0.4;
+                sound.play();
+
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSeconds1 * 1000);
+
+
+            }, startDelaySeconds1 * 1000);
+
+
+            //دونك
+            const startDelaySecondsD1 = 18.2;
+            const stopAfterSecondsD1 = 0.8;
             setTimeout(() => {
-                if (dingSound) {
-                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
-                    setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
-                }
-            }, 18200);
+                const sound = document.getElementById("dingSound");
+                sound.volume = 0.6;
+                sound.play();
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSecondsD1 * 1000);
+
+            }, startDelaySecondsD1 * 1000);
+
+            //برَدَ قلبي من دونكِ.كل لـيلٍ
+            const startDelaySeconds2 = 19.6;
+            const stopAfterSeconds2 = 2.6;
+
             setTimeout(() => {
-                if (typeSound) {
-                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
-                    setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2600);
-                }
-            }, 19600);
+                const sound = document.getElementById("typeSound");
+                sound.volume = 0.4;
+                sound.play();
+
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSeconds2 * 1000);
+
+
+            }, startDelaySeconds2 * 1000);
+
+            //دونك
+            const startDelaySecondsD2 = 22;
+            const stopAfterSecondsD2 = 0.8;
             setTimeout(() => {
-                if (dingSound) {
-                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
-                    setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
-                }
-            }, 22000);
+                const sound = document.getElementById("dingSound");
+                sound.volume = 0.6;
+                sound.play();
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSecondsD2 * 1000);
+
+            }, startDelaySecondsD2 * 1000);
+
+            //شتاق لصوتكِ،لضحكتكِ،وحتى لصمتكِ.           
+
+            const startDelaySeconds3 = 23.5;
+            const stopAfterSeconds3 = 2.8;
+
             setTimeout(() => {
-                if (typeSound) {
-                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
-                    setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2800);
-                }
-            }, 23500);
+                const sound = document.getElementById("typeSound");
+                sound.volume = 0.4;
+                sound.play();
+
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSeconds3 * 1000);
+
+            }, startDelaySeconds3 * 1000);
+
+            //دونك
+            const startDelaySecondsD3 = 26.2;
+            const stopAfterSecondsD3 = 0.8;
             setTimeout(() => {
-                if (dingSound) {
-                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
-                    setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
-                }
-            }, 26200);
+                const sound = document.getElementById("dingSound");
+                sound.volume = 0.6;
+                sound.play();
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSecondsD3 * 1000);
+
+            }, startDelaySecondsD3 * 1000);
+
+            //نتِ أكثر من ذكرى،أنتِ حياة في صدر          
+            const startDelaySeconds4 = 27.8;
+            const stopAfterSeconds4 = 2.8;
+
             setTimeout(() => {
-                if (typeSound) {
-                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
-                    setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2800);
-                }
-            }, 27800);
+                const sound = document.getElementById("typeSound");
+                sound.volume = 0.4;
+                sound.play();
+
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSeconds4 * 1000);
+
+            }, startDelaySeconds4 * 1000);
+
+            //دونك
+            const startDelaySecondsD4 = 31;
+            const stopAfterSecondsD4 = 0.8;
             setTimeout(() => {
-                if (dingSound) {
-                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
-                    setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
-                }
-            }, 31000);
+                const sound = document.getElementById("dingSound");
+                sound.volume = 0.6;
+                sound.play();
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSecondsD4 * 1000);
+
+            }, startDelaySecondsD4 * 1000);
+
+
+            //و كان العناق حروفًا،لكتبتُه ألف مر
+            const startDelaySeconds5 = 32.6;
+            const stopAfterSeconds5 = 2.6;
+
             setTimeout(() => {
-                if (typeSound) {
-                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
-                    setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2600);
-                }
-            }, 32600);
+                const sound = document.getElementById("typeSound");
+                sound.volume = 0.4;
+                sound.play();
+
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSeconds5 * 1000);
+
+            }, startDelaySeconds5 * 1000);
+
+            //دونك
+            const startDelaySecondsD5 = 35.6;
+            const stopAfterSecondsD5 = 0.8;
             setTimeout(() => {
-                if (dingSound) {
-                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
-                    setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
-                }
-            }, 35600);
+                const sound = document.getElementById("dingSound");
+                sound.volume = 0.6;
+                sound.play();
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSecondsD5 * 1000);
+
+            }, startDelaySecondsD5 * 1000);
+
+            //نتِ الجرح الذي لا أريد له شفا
+            const startDelaySeconds6 = 37;
+            const stopAfterSeconds6 = 2.5;
+
             setTimeout(() => {
-                if (typeSound) {
-                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
-                    setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2500);
-                }
-            }, 37000);
+                const sound = document.getElementById("typeSound");
+                sound.volume = 0.4;
+                sound.play();
+
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSeconds6 * 1000);
+
+            }, startDelaySeconds6 * 1000);
+
+            //دونك
+            const startDelaySecondsD6 = 39.5;
+            const stopAfterSecondsD6 = 0.8;
             setTimeout(() => {
-                if (dingSound) {
-                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
-                    setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
-                }
-            }, 39500);
+                const sound = document.getElementById("dingSound");
+                sound.volume = 0.6;
+                sound.play();
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSecondsD6 * 1000);
+            }, startDelaySecondsD6 * 1000);
+
+            //النظرة التي تُحيين
+            const startDelaySeconds7 = 41;
+            const stopAfterSeconds7 = 2;
+
             setTimeout(() => {
-                if (typeSound) {
-                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
-                    setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2000);
-                }
-            }, 41000);
+                const sound = document.getElementById("typeSound");
+                sound.volume = 0.4;
+                sound.play();
+
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSeconds7 * 1000);
+
+            }, startDelaySeconds7 * 1000);
+
+            //دونك
+            const startDelaySecondsD7 = 43;
+            const stopAfterSecondsD7 = 0.8;
             setTimeout(() => {
-                if (dingSound) {
-                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
-                    setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
-                }
-            }, 43000);
+                const sound = document.getElementById("dingSound");
+                sound.volume = 0.6;
+                sound.play();
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSecondsD7 * 1000);
+            }, startDelaySecondsD7 * 1000);
+
+            //حتاجكِ... كما تحتاج الروح نبض
+            const startDelaySeconds8 = 44.7;
+            const stopAfterSeconds8 = 2.7;
+
             setTimeout(() => {
-                if (typeSound) {
-                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
-                    setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2700);
-                }
-            }, 44700);
+                const sound = document.getElementById("typeSound");
+                sound.volume = 0.4;
+                sound.play();
+
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSeconds8 * 1000);
+
+            }, startDelaySeconds8 * 1000);
+
+            //دونك
+            const startDelaySecondsD8 = 47.4;
+            const stopAfterSecondsD8 = 0.8;
             setTimeout(() => {
-                if (dingSound) {
-                    dingSound.volume = 0.6; dingSound.play().catch(e => console.log(e));
-                    setTimeout(() => { dingSound.pause(); dingSound.currentTime = 0; }, 800);
-                }
-            }, 47400);
+                const sound = document.getElementById("dingSound");
+                sound.volume = 0.6;
+                sound.play();
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSecondsD8 * 1000);
+            }, startDelaySecondsD8 * 1000);
+
+            //وأحبكِ... في كل حي
+            const startDelaySeconds9 = 48.7;
+            const stopAfterSeconds9 = 2.1;
+
             setTimeout(() => {
-                if (typeSound) {
-                    typeSound.volume = 0.4; typeSound.play().catch(e => console.log(e));
-                    setTimeout(() => { typeSound.pause(); typeSound.currentTime = 0; }, 2100);
-                }
-            }, 48700);
+                const sound = document.getElementById("typeSound");
+                sound.volume = 0.4;
+                sound.play();
+
+                setTimeout(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }, stopAfterSeconds9 * 1000);
+
+            }, startDelaySeconds9 * 1000);
         }
     }).mousemove(function (e) {
         var offset = canvas.offset(), x, y;
-        var wrap = $('#wrap')[0];
-        var transformMatrix = window.getComputedStyle(wrap).transform;
-        var scaleValue = 1;
-        if (transformMatrix !== 'none') {
-            scaleValue = parseFloat(transformMatrix.split('(')[1].split(',')[0]);
-        }
-        x = (e.pageX - offset.left) / scaleValue;
-        y = (e.pageY - offset.top) / scaleValue;
-
+        x = e.pageX - offset.left;
+        y = e.pageY - offset.top;
         canvas.toggleClass('hand', seed.hover(x, y));
     });
 
@@ -311,6 +431,7 @@
     }));
 
     var jumpAnimate = eval(Jscex.compile("async", function () {
+        var ctx = tree.ctx;
         while (true) {
             tree.ctx.clearRect(0, 0, width, height);
             tree.jump();
@@ -321,7 +442,7 @@
 
     var textAnimate = eval(Jscex.compile("async", function () {
         var together = new Date();
-        together.setFullYear(2025, 9, 17);
+        together.setFullYear(2023, 6, 25);
         together.setHours(0);
         together.setMinutes(0);
         together.setSeconds(0);
@@ -330,7 +451,7 @@
         $("#code").show().typewriter();
         $("#clock-box").fadeIn(500);
         while (true) {
-            window.timeElapse(together);
+            timeElapse(together);
             $await(Jscex.Async.sleep(1000));
         }
     }));

@@ -1,100 +1,36 @@
 <!DOCTYPE html>
-<html lang="id" dir="ltr">
+<html lang="ar" dir="rtl">
+<audio id="myMusic" src="Love_files/love.mp3" loop></audio>
+<audio id="typeSound" src="sounds/type.m4a"></audio>
+<audio id="dingSound" src="sounds/ding.mp3"></audio>
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <!-- منع تكبير الشاشة العشوائي في متصفح سفاري -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-    <title>Untukmu</title>
-    <link rel="icon" type="image/x-icon" href="Love_files/icon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="./Love_files/default.css">
-
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #ffeeed;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            /* منع التمرير الأفقي */
-        }
-
-        #main {
-            width: 100%;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-        }
-
-        /* تثبيت الحجم الأصلي ليتم تصغيره لاحقاً برمجياً */
-        #wrap {
-            position: relative;
-            width: 1100px;
-            height: 680px;
-            margin: 0 auto;
+            font-family: 'Cairo', sans-serif;
         }
 
         .say {
-            direction: ltr;
-            text-align: left;
-            display: block;
-            font-size: 16px;
-            line-height: 1.8;
-            color: #555;
+            direction: rtl;
+            text-align: right;
         }
 
-        #code {
-            padding-left: 20px;
-            display: none;
-        }
-
-        #clock-box {
-            direction: ltr;
-            text-align: left;
-            font-size: 14px;
-            color: #666;
-            margin-top: 10px;
-        }
-
+        /* تحريك نص الساعة لأعلى 5 بكسل */
         #clock {
             position: relative;
-            top: -5px;
-            font-weight: 600;
-            color: #be1a25;
-            font-size: 18px;
-        }
-
-        .digit {
-            font-family: 'Poppins', sans-serif;
-            /* ضمان استخدام أرقام إنجليزية حديثة */
-        }
-
-        /* للشاشات الكبيرة التي تتخطى 1200 بكسل */
-        @media screen and (min-width: 1200px) {
-            #main {
-                align-items: center;
-                height: 100vh;
-                /* جعل الحاوية تأخذ كامل ارتفاع الشاشة */
-            }
-
-            #wrap {
-                /* تكبير الحاوية بنسبة 1.3 أو 1.4 لتملأ الشاشة الكبيرة */
-                transform: scale(1.3);
-                transform-origin: center center;
-                /* التكبير من المنتصف */
-            }
-        }
-
-        /* للشاشات الضخمة جداً (مثل شاشات الـ iMac أو الشاشات الخارجية) */
-        @media screen and (min-width: 1600px) {
-            #wrap {
-                transform: scale(1.6);
-            }
+            top: -9px;
         }
     </style>
 
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>For</title>
+    <link rel="icon" type="image/x-icon" href="Love_files/icon.png">
+    <meta name="title" content="title">
+    <link type="text/css" rel="stylesheet" href="./Love_files/default.css">
     <script type="text/javascript" src="./Love_files/jquery.min.js"></script>
     <script type="text/javascript" src="./Love_files/jscex.min.js"></script>
     <script type="text/javascript" src="./Love_files/jscex-parser.js"></script>
@@ -104,39 +40,51 @@
     <script type="text/javascript" src="./Love_files/jscex-async-powerpack.min.js"></script>
     <script type="text/javascript" src="./Love_files/functions.js" charset="utf-8"></script>
     <script type="text/javascript" src="./Love_files/love.js" charset="utf-8"></script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .say {
+            direction: rtl;
+            text-align: right;
+        }
+    </style>
 </head>
 
 <body>
-    <!-- عناصر الصوت -->
-    <audio id="myMusic" src="Love_files/love.mp3" loop preload="auto"></audio>
-    <audio id="typeSound" src="sounds/type.m4a" preload="auto"></audio>
-    <audio id="dingSound" src="sounds/ding.mp3" preload="auto"></audio>
+
+
+
+
 
     <div id="main">
         <div id="error">
-            Browser Anda tidak mendukung konten ini. Silakan gunakan Google Chrome atau Firefox.
+            Tu navegador que estás usando no es compatible con el contenido que se va a mostrar.
+            Por favor, usa Google (<a
+                href="http://www.google.cn/chrome/intl/zh-CN/landing_chrome.html?hl=zh-CN&brand=CHMI">Chrome</a>)
+            o Firefox (<a href="http://firefox.com.cn/download/">Firefox</a>)~
         </div>
 
         <div id="wrap">
             <div id="text">
                 <div id="code">
-                    <span class="say" style="font-weight: 600; color: #be1a25;">Untuk dia yang menghuni
-                        hatiku:</span><br>
-                    <span class="say">Sejak kepergianmu, cahaya dunia ini meredup,</span>
-                    <span class="say">dan hatiku terasa dingin tanpamu.</span>
-                    <span class="say">Setiap malam, aku merindukan suaramu, tawamu, bahkan sunyimu.</span>
-                    <span class="say">Kamu lebih dari sekadar kenangan, kamu adalah kehidupan di dadaku.</span>
-                    <span class="say">Jika pelukan bisa diwujudkan dalam kata-kata, aku akan menulisnya seribu
-                        kali.</span>
-                    <span class="say">Kamu adalah luka yang tak pernah ingin kusembuhkan,</span>
-                    <span class="say">dan tatapan yang kembali menghidupkanku.</span>
-                    <span class="say">Aku membutuhkanmu... seperti jiwa yang membutuhkan detaknya.</span>
-                    <span class="say"><span> </span>— Dan aku mencintaimu... setiap waktu 💖</span>
+                    <span class="say">إلى من تسكن قلبي:</span><br><br>
+                    <span class="say">منذ غيابكِ، خفت نورالـدُنية،</span><br>
+                    <span class="say">وبرَدَ قلبي من دونكِ.كل لـيلٍ</span><br>
+                    <span class="say"> أشتاق لصوتكِ،لضحكتكِ،وحتى لصمتكِ.</span><br>
+                    <span class="say">أنتِ أكثر من ذكرى،أنتِ حياة في صدري.</span><br>
+                    <span class="say">لو كان العناق حروفًا،لكتبتُه ألف مرة.</span><br>
+                    <span class="say">أنتِ الجرح الذي لا أريد له شفاء،</span><br>
+                    <span class="say">والنــظرة التــي تُحـييني.</span><br>
+                    <span class="say">أحتاجكِ... كما تحتاج الروح نبضها.</span><br>
+                    <span class="say"><span class="space"></span>— وأحبكِ... في كل حين 💖</span>
                 </div>
-            </div>
 
+            </div>
             <div id="clock-box">
-                <span>"Sejak hari itu... aku melewatkan setiap waktu bersamamu."</span>
+                <span>"منذ ذلك اليوم... وأنا أعيش الوقت بكِ."</span>
+
                 <div id="clock"></div>
             </div>
 
@@ -144,7 +92,10 @@
         </div>
     </div>
 
+
     <script src="script.js"></script>
+
+
 </body>
 
 </html>
