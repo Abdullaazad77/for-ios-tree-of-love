@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <!-- منع تكبير الشاشة العشوائي في متصفح سفاري -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <title>Untukmu</title>
     <link rel="icon" type="image/x-icon" href="Love_files/icon.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -69,6 +70,29 @@
             font-family: 'Poppins', sans-serif;
             /* ضمان استخدام أرقام إنجليزية حديثة */
         }
+
+        /* للشاشات الكبيرة التي تتخطى 1200 بكسل */
+        @media screen and (min-width: 1200px) {
+            #main {
+                align-items: center;
+                height: 100vh;
+                /* جعل الحاوية تأخذ كامل ارتفاع الشاشة */
+            }
+
+            #wrap {
+                /* تكبير الحاوية بنسبة 1.3 أو 1.4 لتملأ الشاشة الكبيرة */
+                transform: scale(1.3);
+                transform-origin: center center;
+                /* التكبير من المنتصف */
+            }
+        }
+
+        /* للشاشات الضخمة جداً (مثل شاشات الـ iMac أو الشاشات الخارجية) */
+        @media screen and (min-width: 1600px) {
+            #wrap {
+                transform: scale(1.6);
+            }
+        }
     </style>
 
     <script type="text/javascript" src="./Love_files/jquery.min.js"></script>
@@ -107,7 +131,7 @@
                     <span class="say">Kamu adalah luka yang tak pernah ingin kusembuhkan,</span>
                     <span class="say">dan tatapan yang kembali menghidupkanku.</span>
                     <span class="say">Aku membutuhkanmu... seperti jiwa yang membutuhkan detaknya.</span>
-                    <span class="say"><span>     </span>— Dan aku mencintaimu... setiap waktu 💖</span>
+                    <span class="say"><span> </span>— Dan aku mencintaimu... setiap waktu 💖</span>
                 </div>
             </div>
 
